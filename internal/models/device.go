@@ -111,5 +111,5 @@ type DeviceStateResponse struct {
 type DeviceStatePayload struct {
 	SKU          string       `json:"sku"`
 	DeviceID     string       `json:"device"`
-	Capabilities []Capability `json:"capabilities`
+	Capabilities []Capability `json:"capabilities"`
 }
