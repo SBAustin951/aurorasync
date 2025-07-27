@@ -27,6 +27,7 @@ func NewGoveeClient(apiKey string) *GoveeClient {
 }
 
 func (g *GoveeClient) Get(endpoint string, target any) error {
+	fmt.Printf("%s/%s\n", baseURL, endpoint)
 	req, err := http.NewRequest("GET", fmt.Sprintf("%s/%s", baseURL, endpoint), nil)
 	if err != nil {
 		return err
@@ -43,7 +44,7 @@ func (g *GoveeClient) Get(endpoint string, target any) error {
 		return fmt.Errorf("API return status %d", resp.StatusCode)
 	}
 
-	return json.NewDecoder(resp.Body).Decode(target)
+	return json.NewDecoder(resp.Body).Decode(&target)
 }
 
 func (g *GoveeClient) Post(endpoint string, payload, target any) error {
@@ -56,6 +57,8 @@ func (g *GoveeClient) Post(endpoint string, payload, target any) error {
 	if err != nil {
 		return err
 	}
+	req.Header.Add("Govee-API-Key", g.APIKey)
+	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := g.HTTPClient.Do(req)
 	if err != nil {
@@ -67,5 +70,5 @@ func (g *GoveeClient) Post(endpoint string, payload, target any) error {
 		return fmt.Errorf("API return status %d", resp.StatusCode)
 	}
 
-	return json.NewDecoder(resp.Body).Decode(target)
+	return json.NewDecoder(resp.Body).Decode(&target)
 }

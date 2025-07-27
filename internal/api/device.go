@@ -6,14 +6,14 @@ import (
 )
 
 const (
-	allDevicesEndpoint  = "/router/api/v1/user/devices"
-	deviceStateEndpoint = "/router/api/v1/device/state"
-	controlEndpoint     = "/router/api/v1/device/control"
+	allDevicesEndpoint  = "router/api/v1/user/devices"
+	deviceStateEndpoint = "router/api/v1/device/state"
+	controlEndpoint     = "router/api/v1/device/control"
 )
 
 func (g *GoveeClient) GetAllDevices() (*models.DeviceResponse, error) {
 	var deviceResponse models.DeviceResponse
-	if err := g.Get(allDevicesEndpoint, deviceResponse); err != nil {
+	if err := g.Get(allDevicesEndpoint, &deviceResponse); err != nil {
 		return nil, err
 	}
 	return &deviceResponse, nil
@@ -28,7 +28,7 @@ func (g *GoveeClient) GetDeviceState(sku, deviceId string) (*models.DeviceStateR
 		},
 	}
 	var deviceStateResponse models.DeviceStateResponse
-	if err := g.Post(deviceStateEndpoint, deviceStateRequest, deviceStateResponse); err != nil {
+	if err := g.Post(deviceStateEndpoint, &deviceStateRequest, &deviceStateResponse); err != nil {
 		return nil, err
 	}
 	return &deviceStateResponse, nil
@@ -50,7 +50,7 @@ func (g *GoveeClient) PowerOn(sku, deviceId string) (*models.ControlResponse, er
 		},
 	}
 	var controlResponse models.ControlResponse
-	if err := g.Post(controlEndpoint, controlRequest, controlResponse); err != nil {
+	if err := g.Post(controlEndpoint, &controlRequest, &controlResponse); err != nil {
 		return nil, err
 	}
 	return &controlResponse, nil
@@ -58,7 +58,7 @@ func (g *GoveeClient) PowerOn(sku, deviceId string) (*models.ControlResponse, er
 
 func (g *GoveeClient) PowerOff(sku, deviceId string) (*models.ControlResponse, error) {
 	value := new(int)
-	*value = 1
+	*value = 0
 	controlRequest := models.ControlRequest{
 		RequestID: uuid.New(),
 		Payload: models.ControlPayload{
@@ -72,7 +72,7 @@ func (g *GoveeClient) PowerOff(sku, deviceId string) (*models.ControlResponse, e
 		},
 	}
 	var controlResponse models.ControlResponse
-	if err := g.Post(controlEndpoint, controlRequest, controlResponse); err != nil {
+	if err := g.Post(controlEndpoint, &controlRequest, &controlResponse); err != nil {
 		return nil, err
 	}
 	return &controlResponse, nil
